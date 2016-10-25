@@ -1,7 +1,23 @@
-extends layout
-
-block content
-  h1= title
-  p Welcome to #{title}
-  div#app
-    app-main
+doctype html
+html
+  head
+    title= title
+    meta(name="viewport",content="width=device-width,initial-scale=1,user-scalable=no")
+  body
+    #app
+      app-main
+    script(src="/app.bundle.js")
+    script
+      | var currClientWidth, currClientHeight, fontValue, style, originWidth = 414;
+      | __resize();
+      | window.addEventListener('resize', __resize, false);
+      | function __resize() {
+      |   currClientWidth = document.documentElement.clientWidth;
+      |   if (currClientWidth > 640) currClientWidth = 640;
+      |   if (currClientWidth < 320) currClientWidth = 320;
+      |   fontValue = ((62.5 * currClientWidth) / originWidth).toFixed(2);
+      |   document.documentElement.style.fontSize = fontValue + '%';
+      |   currClientHeight = document.documentElement.clientHeight;
+      |   style = document.querySelector('.welcome-page').style;
+      |   style.height = style.lineHeight = currClientHeight + 'px';
+      | }

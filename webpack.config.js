@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var path = require('path');
 
 var publicPath = 'http://localhost:9999/';
@@ -8,7 +9,7 @@ module.exports = {
     entry: ['./src/main.js', hotMiddlewareScript],
     output: {
         filename: 'app.bundle.js',
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve('./dist'),
         publicPath: publicPath
     },
     devtool: 'source-map',
@@ -20,6 +21,9 @@ module.exports = {
             test: /\.jsx?$/,
             exclude: /node_modules/,
             loader: 'babel?presets[]=latest',
+        }, {
+            test: /\.scss?$/,
+            loader: 'style!css!sass',
         }, {
             test: /\.(png|jpg)$/,
             loader: 'url?limit=8192&context=client&name=[path][name].[ext]'

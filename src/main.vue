@@ -1,15 +1,10 @@
 <template>
-    <div>
+    <article id="app-main">
+        <section class="welcome-page">Mercury</section>
         <header-component/>
-        <div>this is template body</div>
         <other-component/>
-    </div>
+    </article>
 </template>
-<style>
-    body {
-        background-color: #afdfe4;
-    }
-</style>
 <script>
     import HeaderComponent from './components/header'
     import OtherComponent from './components/other'

@@ -1,0 +1,25 @@
+@import "includes/variables";
+@import "includes/mixins";
+@import "includes/functions";
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  @include font-style;
+}
+
+body {
+}
+
+.welcome-page{
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+  background-color: $mercury-color;
+  font-size: 5rem;
+  text-align: center;
+  color: #ffffff;
+}
