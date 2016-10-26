@@ -1,11 +1,8 @@
+@import "includes/reset";
 @import "includes/variables";
 @import "includes/mixins";
 @import "includes/functions";
-
-*{
-  margin: 0;
-  padding: 0;
-}
+@import "includes/keyframes";
 
 html {
   @include font-style;
@@ -14,12 +11,45 @@ html {
 body {
 }
 
+#app-main{
+  position: relative;
+  max-width: $max-width;
+  margin: 0 auto;
+}
+
 .welcome-page{
   position: absolute;
   z-index: 1000;
   width: 100%;
-  background-color: $mercury-color;
+  background-color: $mercury-color-1;
   font-size: 5rem;
   text-align: center;
-  color: #ffffff;
+  color: $mercury-color-2;
+  animation: disappear 3s ease 1s 1 normal running forwards;
+  -webkit-animation: disappear 3s ease 1s 1 normal running forwards;
+}
+
+.bottom-menu{
+  position: fixed;
+  bottom: 0;
+  z-index: 900;
+  height: $bottom-menu-height;
+  width: 100%;
+  max-width: $max-width;
+  background-color: $mercury-color-1;
+  font-size: 0;
+  vertical-align: middle;
+  span{
+    display: inline-block;
+    width: 49.85%;
+    font-size: 2rem;
+    line-height: $bottom-menu-height;
+    text-align: center;
+    vertical-align: middle;
+    &:nth-of-type(2){
+      width: 0.3%;
+      height: $bottom-menu-height - 2rem;
+      background-color: $mercury-color-2;
+    }
+  }
 }
