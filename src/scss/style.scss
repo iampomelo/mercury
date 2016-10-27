@@ -9,27 +9,28 @@ html {
 }
 
 body {
+  font-size: .3rem;
 }
 
-#app-main{
+#app-main {
   position: relative;
   max-width: $max-width;
   margin: 0 auto;
 }
 
-.welcome-page{
+.welcome-page {
   position: absolute;
   z-index: 1000;
   width: 100%;
   background-color: $mercury-color-1;
-  font-size: 5rem;
+  font-size: 1.5rem;
   text-align: center;
   color: $mercury-color-2;
   animation: disappear 3s ease 1s 1 normal running forwards;
   -webkit-animation: disappear 3s ease 1s 1 normal running forwards;
 }
 
-.bottom-menu{
+.bottom-menu {
   position: fixed;
   bottom: 0;
   z-index: 900;
@@ -39,16 +40,17 @@ body {
   background-color: $mercury-color-1;
   font-size: 0;
   vertical-align: middle;
-  span{
+  span {
     display: inline-block;
-    width: 49.85%;
-    font-size: 2rem;
+    width: 49.8%;
+    font-size: .4rem;
     line-height: $bottom-menu-height;
     text-align: center;
     vertical-align: middle;
-    &:nth-of-type(2){
-      width: 0.3%;
-      height: $bottom-menu-height - 2rem;
+    color: $mercury-color-2;
+    &:nth-of-type(2) {
+      width: 1px;
+      height: $bottom-menu-height - .2rem;
       background-color: $mercury-color-2;
     }
   }

@@ -1,16 +1,13 @@
 <template>
     <article id="app-main">
         <section class="welcome-page">Mercury</section>
-        <section class="bottom-menu">
-            <span>消息</span>
-            <span></span>
-            <span>好友</span>
-        </section>
+        <main-layout></main-layout>
+        <chat-page></chat-page>
     </article>
 </template>
 <script>
     import MainLayout from './components/main-layout'
-    import BottomMenu from './components/bottom-menu'
+    import ChatPage from './components/chat-page'
     export default{
         data(){
             return {
@@ -19,7 +16,7 @@
         },
         components: {
             MainLayout,
-            BottomMenu
+            ChatPage
         }
     }
 </script>

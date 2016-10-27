@@ -2,15 +2,15 @@ var express = require('express'),
     path = require('path'),
     favicon = require('serve-favicon'),
     logger = require('morgan'),
-    cookieParser = require('cookie-parser'), bodyParser = require('body-parser'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
     webpack = require('webpack'),
     webpackDevMiddleware = require('webpack-dev-middleware'),
     webpackHotMiddleware = require('webpack-hot-middleware'),
     webpackDevConfig = require('./webpack.config.js'),
     compiler = webpack(webpackDevConfig);
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var routes = require('./routes/router');
 
 var app = express();
 
@@ -36,7 +36,6 @@ app.use(webpackHotMiddleware(compiler));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {

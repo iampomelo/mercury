@@ -1,12 +1,10 @@
 <template>
-    <div>header</div>
+    <section class="bottom-menu">
+        <span>消息</span>
+        <span></span>
+        <span>好友</span>
+    </section>
 </template>
 <script>
-    export default{
-        data(){
-            return{
-                msg:'hello vue'
-            }
-        }
-    }
+    export default{}
 </script>

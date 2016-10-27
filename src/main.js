@@ -1,28 +1,70 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
+import VueRouter from 'vue-router';
 import appMain from './main.vue';
 import style from './scss/style.scss';
 
 class __init_page {
-    constructor(){
-        this.originWidth = 414;
+    constructor() {
+        this.dpr = window.devicePixelRatio >= 1.5 ? 2 : window.devicePixelRatio;
         this.__resize();
         window.addEventListener('resize', this.__resize, false);
-        setTimeout(()=>{document.querySelector('.welcome-page').style.display = 'none';}, 4000);
+        setTimeout(()=> {
+            document.querySelector('.welcome-page').style.display = 'none';
+        }, 4000);
     }
-    __resize(){
-        this.currClientWidth = document.documentElement.clientWidth;
-        if (this.currClientWidth > 640) this.currClientWidth = 640;
-        if (this.currClientWidth < 320) this.currClientWidth = 320;
-        this.fontValue = ((62.5 * this.currClientWidth) / this.originWidth).toFixed(2);
-        document.documentElement.style.fontSize = this.fontValue + '%';
-        this.currClientHeight = document.documentElement.clientHeight;
-        this.style = document.querySelector('.welcome-page').style;
-        this.style.height = this.style.lineHeight = this.currClientHeight + 'px';
+
+    __resize() {
+        this.html = document.documentElement;
+        this.width = this.html.clientWidth > 750 ? 750 : this.html.clientWidth;
+        this.html.setAttribute('data-dpr', this.dpr);
+        this.html.style.fontSize = 100 * this.width / 750 + 'px';
+        this.wpstyle = document.querySelector('.welcome-page').style;
+        this.wpstyle.height = this.wpstyle.lineHeight = document.documentElement.clientHeight + 'px';
     }
 }
 
+Vue.use(Vuex);
+
+const socket = io('http://172.20.6.108:9999');
+const store = new Vuex.Store({
+    state: {
+        messageArr: []
+    },
+    mutations: {
+        getAllMessages(state, payload){
+            state.messageArr = payload.messageArr;
+        },
+        addMessage(state,payload){
+            state.messageArr.push(payload.message);
+        },
+        sendMessage(state,payload){
+            socket.emit('createMessage',payload.content)
+        }
+    },
+    getters:{
+        messageArr:state=>{
+            return state.messageArr;
+        }
+    }
+});
+
+
+socket.emit('getAllMessages');
+socket.on('allMessages', messageArr=> {
+    store.commit('getAllMessages', {
+        messageArr
+    });
+});
+socket.on('messageAdded', message=> {
+    store.commit('addMessage', {
+        message
+    });
+});
+
 new Vue({
     el: '#app',
+    store,
     mounted(){
         new __init_page();
     },

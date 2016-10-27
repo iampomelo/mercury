@@ -21,6 +21,14 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
+
+/**
+ * Use socket.io
+ */
+
+
+var io = require('socket.io')(server);
+
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -28,6 +36,17 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+var messageArr = ['我是谁','你是谁'];
+io.on('connection',function (socket) {
+  socket.on('getAllMessages',function () {
+    socket.emit('allMessages',messageArr);
+  });
+  socket.on('createMessage',function (message) {
+    messageArr.push(message);
+    io.emit('messageAdded',message);
+  });
+});
 
 /**
  * Normalize a port into a number, string, or false.

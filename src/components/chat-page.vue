@@ -1,27 +1,27 @@
 <template>
-    <div>
-        <header-component/>
-        <div>this is template body</div>
-        <other-component/>
-    </div>
+    <section>
+        <ul>
+            <li v-for="message in $store.getters.messageArr">{{message}}</li>
+        </ul>
+        <label for="messageInput"></label>
+        <input type="text" id="messageInput" v-model="content"/>
+        <input type="button" @click="send" value="发送"/>
+    </section>
 </template>
-<style>
-    body{
-        background-color:#ff0000;
-    }
-</style>
 <script>
-    import HeaderComponent from './components/header.vue'
-    import OtherComponent from './components/other.vue'
     export default{
         data(){
-            return{
-                msg:'hello vue'
+            return {
+                content: ''
             }
         },
-        components:{
-            'other-component':OtherComponent,
-            HeaderComponent,
+        methods:{
+            send(){
+                this.$store.commit('sendMessage',{
+                    content:this.content
+                });
+                this.content = '';
+            }
         }
     }
 </script>
