@@ -13,7 +13,6 @@ class __init_page {
             document.querySelector('.welcome-page').style.display = 'none';
         }, 4000);
     }
-
     __resize() {
         this.html = document.documentElement;
         this.width = this.html.clientWidth > 750 ? 750 : this.html.clientWidth;
@@ -25,6 +24,7 @@ class __init_page {
 }
 
 Vue.use(Vuex);
+Vue.use(VueRouter);
 
 const socket = io('http://172.20.6.108:9999');
 const store = new Vuex.Store({
@@ -35,18 +35,32 @@ const store = new Vuex.Store({
         getAllMessages(state, payload){
             state.messageArr = payload.messageArr;
         },
-        addMessage(state,payload){
+        addMessage(state, payload){
             state.messageArr.push(payload.message);
         },
-        sendMessage(state,payload){
-            socket.emit('createMessage',payload.content)
+        sendMessage(state, payload){
+            socket.emit('createMessage', payload.content)
         }
     },
-    getters:{
-        messageArr:state=>{
+    getters: {
+        messageArr: state=> {
             return state.messageArr;
         }
     }
+});
+const routes = [{
+    path: '/',
+    component: appMain,
+    children: [{
+        path: '',
+        component: appMain.components.MainLayout
+    }, {
+        path: '/chat',
+        component: appMain.components.ChatPage
+    }]
+}];
+const router = new VueRouter({
+    routes
 });
 
 
@@ -62,13 +76,10 @@ socket.on('messageAdded', message=> {
     });
 });
 
-new Vue({
-    el: '#app',
+const app = new Vue({
     store,
+    router,
     mounted(){
         new __init_page();
-    },
-    components: {
-        appMain
     }
-});
+}).$mount('#app');

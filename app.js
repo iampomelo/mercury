@@ -4,11 +4,14 @@ var express = require('express'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
+    session = require('express-session'),
     webpack = require('webpack'),
     webpackDevMiddleware = require('webpack-dev-middleware'),
     webpackHotMiddleware = require('webpack-hot-middleware'),
     webpackDevConfig = require('./webpack.config.js'),
-    compiler = webpack(webpackDevConfig);
+    compiler = webpack(webpackDevConfig),
+    config = require('./config'),
+    mongoStore = require('connect-mongo')(session());
 
 var routes = require('./routes/router');
 
@@ -24,6 +27,16 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+app.use(session({
+    secret: config.cookieSecret,
+    key: config.cookieName,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    },
+    store: new mongoStore({
+        db: config.db
+    })
+}));
 
 app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackDevConfig.output.publicPath,
