@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
+import VueResource from 'vue-resource';
 import appMain from './main.vue';
 import style from './scss/style.scss';
 
@@ -25,6 +26,7 @@ class __init_page {
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
+Vue.use(VueResource);
 
 const socket = io('http://172.20.6.108:9999');
 const store = new Vuex.Store({

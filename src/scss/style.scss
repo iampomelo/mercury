@@ -55,3 +55,25 @@ body {
     }
   }
 }
+
+.login-field {
+  text-align: center;
+  padding: 1rem .5rem;
+  background-color: $mercury-color-1;
+  h2 {
+    font-size: .5rem;
+    font-weight: 100;
+    margin-bottom: .8rem;
+  }
+  input {
+    display: block;
+    margin: .5rem auto;
+    &[type=text], &[type=password] {
+      width: 5rem;
+      height: .8rem;
+      font-size: .4rem;
+      border-radius: .1rem;
+    }
+
+  }
+}
