@@ -11,7 +11,7 @@ var express = require('express'),
     webpackDevConfig = require('./webpack.config.js'),
     compiler = webpack(webpackDevConfig),
     config = require('./config'),
-    mongoStore = require('connect-mongo')(session());
+    mongoStore = require('connect-mongo')(session);
 
 var routes = require('./routes/router');
 
@@ -34,8 +34,10 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 7
     },
     store: new mongoStore({
-        db: config.db
-    })
+        url: config.dburl
+    }),
+    resave: true,
+    saveUninitialized: true
 }));
 
 app.use(webpackDevMiddleware(compiler, {
@@ -49,6 +51,8 @@ app.use(webpackHotMiddleware(compiler));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/', routes);
+
+
 
 // catch 404 and forward to error handler
 // app.use(function (req, res, next) {

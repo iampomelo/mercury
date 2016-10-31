@@ -57,6 +57,9 @@ const routes = [{
     }, {
         path: '/chat',
         component: appMain.components.ChatPage
+    }, {
+        path: '/login',
+        component: appMain.components.LoginPage
     }]
 }];
 const router = new VueRouter({

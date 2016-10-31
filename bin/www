@@ -4,9 +4,14 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('mercury:server');
-var http = require('http');
+var app = require('../app'),
+    debug = require('debug')('mercury:server'),
+    http = require('http'),
+    cookie = require('cookie'),
+    parseSignedCookie = require('../widget/utils').parseSignedCookie,
+    config = require('../config'),
+    session = require('express-session'),
+    mongoStore = require('connect-mongo')(session);
 
 /**
  * Get port from environment and store in Express.
@@ -26,7 +31,6 @@ var server = http.createServer(app);
  * Use socket.io
  */
 
-
 var io = require('socket.io')(server);
 
 /**
@@ -37,15 +41,45 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-var messageArr = ['我是谁','你是谁'];
-io.on('connection',function (socket) {
-  socket.on('getAllMessages',function () {
-    socket.emit('allMessages',messageArr);
-  });
-  socket.on('createMessage',function (message) {
-    messageArr.push(message);
-    io.emit('messageAdded',message);
-  });
+/**
+ * Configure socket.io
+ */
+
+var messageArr = ['message1', 'message2'];
+var sessionStore = new mongoStore({
+    url: config.dburl
+});
+
+// io.set('authorization', function (handshakeData, accept) {
+//     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
+//     var mercuryCookie = parseSignedCookie(handshakeData.cookie['mercury_cookie'], config.cookieSecret);
+//     if (mercuryCookie) {
+//         sessionStore.get(mercuryCookie, function (err, session) {
+//             if (err) {
+//                 accept(err.message, false);
+//             } else {
+//                 handshakeData.session = session;
+//                 if (session.user) {
+//                     accept(null, true);
+//                 } else {
+//                     accept('no login...', false);
+//                 }
+//             }
+//         });
+//     } else {
+//         accept('no session', false);
+//     }
+// });
+
+
+io.on('connection', function (socket) {
+    socket.on('getAllMessages', function () {
+        socket.emit('allMessages', messageArr);
+    });
+    socket.on('createMessage', function (message) {
+        messageArr.push(message);
+        io.emit('messageAdded', message);
+    });
 });
 
 /**
@@ -53,19 +87,19 @@ io.on('connection',function (socket) {
  */
 
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+    var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+    if (port >= 0) {
+        // port number
+        return port;
+    }
 
-  return false;
+    return false;
 }
 
 /**
@@ -73,27 +107,27 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+    var bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
 }
 
 /**
@@ -101,9 +135,9 @@ function onError(error) {
  */
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+    var addr = server.address();
+    var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind);
 }

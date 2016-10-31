@@ -5,12 +5,14 @@
     </article>
 </template>
 <script>
-    import MainLayout from './components/main-layout'
-    import ChatPage from './components/chat-page'
+    import MainLayout from './components/main-layout';
+    import ChatPage from './components/chat-page';
+    import LoginPage from './components/login-page'
     export default{
         components: {
             MainLayout,
-            ChatPage
+            ChatPage,
+            LoginPage
         }
-    }
+    };
 </script>
