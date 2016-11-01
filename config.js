@@ -1,5 +1,5 @@
 module.exports = {
-    cookieSecret: 'mercury',
+    cookieSecret: 'gu7m*?sd8m#2shvk0lex5b$thn2aak^y',
     cookieName:'mercury_cookie',
-    dburl: 'mongodb://localhost:27017/mercury'
+    dbURL: 'mongodb://localhost:27017/mercury'
 };

@@ -31,10 +31,11 @@ app.use(session({
     secret: config.cookieSecret,
     key: config.cookieName,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24 * 7
+        maxAge: 1000 * 60 * 5
     },
     store: new mongoStore({
-        url: config.dburl
+        url: config.dbURL,
+        ttl: 60 * 5
     }),
     resave: true,
     saveUninitialized: true
@@ -51,7 +52,6 @@ app.use(webpackHotMiddleware(compiler));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/', routes);
-
 
 
 // catch 404 and forward to error handler

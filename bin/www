@@ -46,9 +46,9 @@ server.on('listening', onListening);
  */
 
 var messageArr = ['message1', 'message2'];
-var sessionStore = new mongoStore({
-    url: config.dburl
-});
+// var sessionStore = new mongoStore({
+//     url: config.dburl
+// });
 
 // io.set('authorization', function (handshakeData, accept) {
 //     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);

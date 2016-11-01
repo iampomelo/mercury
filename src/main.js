@@ -20,7 +20,7 @@ class __init_page {
         this.html.setAttribute('data-dpr', this.dpr);
         this.html.style.fontSize = 100 * this.width / 750 + 'px';
         this.wpstyle = document.querySelector('.welcome-page').style;
-        this.wpstyle.height = this.wpstyle.lineHeight = document.documentElement.clientHeight + 'px';
+        document.querySelector('#app-main').style.minHeight = this.wpstyle.height = this.wpstyle.lineHeight = document.documentElement.clientHeight + 'px';
     }
 }
 
@@ -28,7 +28,7 @@ Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(VueResource);
 
-const socket = io('http://172.20.6.108:9999');
+const socket = io();
 const store = new Vuex.Store({
     state: {
         messageArr: []
@@ -84,6 +84,16 @@ socket.on('messageAdded', message=> {
 const app = new Vue({
     store,
     router,
+    beforeCreate(){
+        /**
+         * Confirm session, Vue-Router SPA has no idea to use middlewares because everything is under '/'
+         */
+        this.$http.get('/anth').then(res=>{
+            if(!res.body.success){
+                location.hash = '#/login';
+            }
+        });
+    },
     mounted(){
         new __init_page();
     }

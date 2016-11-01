@@ -4,6 +4,10 @@
 @import "includes/functions";
 @import "includes/keyframes";
 
+*{
+  @include border-box-sizing;
+}
+
 html {
   @include font-style;
 }
@@ -60,20 +64,44 @@ body {
   text-align: center;
   padding: 1rem .5rem;
   background-color: $mercury-color-1;
+  min-height: inherit;
   h2 {
     font-size: .5rem;
     font-weight: 100;
     margin-bottom: .8rem;
+    color: $mercury-color-2;
   }
   input {
     display: block;
-    margin: .5rem auto;
-    &[type=text], &[type=password] {
-      width: 5rem;
-      height: .8rem;
-      font-size: .4rem;
-      border-radius: .1rem;
+    margin: .05rem auto;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 0 8px;
+    -moz-box-shadow: rgba(0, 0, 0, 0.1) 0 0 10px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 0 10px;
+    width: 5rem;
+    height: .8rem;
+    font-size: .4rem;
+    color: $mercury-color-3;
+    padding: .1rem .2rem;
+    &[type=text]{
+      border-radius: .15rem .15rem 0 0;
     }
-
+    &[type=password]{
+      border-radius: 0 0 .15rem .15rem;
+    }
+    &[type=button]{
+      background-color: $mercury-color-1;
+      color: $mercury-color-2;
+      margin: .3rem auto;
+      border:{
+        radius: .15rem;
+        color: $mercury-color-2;
+        width: 2px;
+        style: solid;
+      };
+      &.loading{
+        background-color: darken($mercury-color-1,20%);
+        border-color: darken($mercury-color-2,10%);
+      }
+    }
   }
 }
