@@ -1,7 +1,7 @@
 var config = require('../config'),
     MongoClient = require('mongodb').MongoClient;
-module.exports = function (fn) {
-    MongoClient.connect(config.dbURL, function (err, db) {
+module.exports = (fn)=> {
+    MongoClient.connect(config.dbURL, (err, db)=> {
         fn(db);
     });
 };

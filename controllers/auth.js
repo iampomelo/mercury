@@ -1,6 +1,6 @@
 var dbHelper = require('../models/dbHelper');
 
-exports.stateCheck = function (req, res) {
+exports.stateCheck = (req, res)=> {
     if (req.session && req.session.user) {
         res.send({"success": true, "user": req.session.user});
     } else {
@@ -8,31 +8,34 @@ exports.stateCheck = function (req, res) {
     }
 };
 
-exports.login = function (req, res) {
+exports.login = (req, res)=> {
     var username = req.body.username,
         password = req.body.password;
-    new Promise(function (resolve, reject) {
-        dbHelper(function (db) {
+    new Promise((resolve, reject)=> {
+        dbHelper(db=> {
             var collection = db.collection('users');
-            collection.find({"username": username}).toArray().then(function (docs) {
-                console.log(docs);
-                db.close();
-                if (docs[0].password == password) {
-                    resolve();
+            collection.findOne({"username": username}).then(doc=> {
+                if (doc.password == password) {
+                    collection.updateOne({"username": username}, {$set: {"online": true}}).then(()=> {
+                        db.close();
+                        resolve(doc);
+                    });
                 } else {
+                    db.close();
                     reject();
                 }
             });
         });
-    }).then(function () {
+    }).then(data=> {
+        delete data.password;
         req.session.user = {username: username};
-        res.send({"success": true, "user": username});
-    },function () {
+        res.send({"success": true, "user": data});
+    }, ()=> {
         res.send({"success": false});
     });
 };
 
-exports.logout = function (req, res) {
+exports.logout = (req, res)=> {
     if (req.session && req.session.user) {
         req.session.user = null;
         res.send({"success": true});
