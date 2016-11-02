@@ -4,7 +4,7 @@
 @import "includes/functions";
 @import "includes/keyframes";
 
-*{
+* {
   @include border-box-sizing;
 }
 
@@ -34,16 +34,31 @@ body {
   -webkit-animation: disappear 3s ease 1s 1 normal running forwards;
 }
 
+.top-menu {
+  @include fixed-menu;
+  top: 0;
+  height: $top-menu-height;
+  span {
+    vertical-align: middle;
+    line-height: $top-menu-height;
+    color: $mercury-color-2;
+    font-size: .3rem;
+  }
+  .left-park{
+    position:absolute;
+    left:.3rem;
+  }
+  .right-park{
+    position:absolute;
+    right:.3rem;
+  }
+}
+
 .bottom-menu {
-  position: fixed;
+  @include fixed-menu;
   bottom: 0;
-  z-index: 900;
   height: $bottom-menu-height;
-  width: 100%;
-  max-width: $max-width;
-  background-color: $mercury-color-1;
   font-size: 0;
-  vertical-align: middle;
   span {
     display: inline-block;
     width: 49.8%;
@@ -82,25 +97,26 @@ body {
     font-size: .4rem;
     color: $mercury-color-3;
     padding: .1rem .2rem;
-    &[type=text]{
+    &[type=text] {
       border-radius: .15rem .15rem 0 0;
     }
-    &[type=password]{
+    &[type=password] {
       border-radius: 0 0 .15rem .15rem;
     }
-    &[type=button]{
+    &[type=button] {
       background-color: $mercury-color-1;
       color: $mercury-color-2;
       margin: .3rem auto;
-      border:{
+      border: {
         radius: .15rem;
         color: $mercury-color-2;
         width: 2px;
         style: solid;
-      };
-      &.loading{
-        background-color: darken($mercury-color-1,20%);
-        border-color: darken($mercury-color-2,10%);
+      }
+    ;
+      &.loading {
+        background-color: darken($mercury-color-1, 20%);
+        border-color: darken($mercury-color-2, 10%);
       }
     }
   }

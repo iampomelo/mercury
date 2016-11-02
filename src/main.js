@@ -14,11 +14,12 @@ class __init_page {
             document.querySelector('.welcome-page').style.display = 'none';
         }, 4000);
     }
+
     __resize() {
         this.html = document.documentElement;
-        this.width = this.html.clientWidth > 750 ? 750 : this.html.clientWidth;
+        this.width = this.html.clientWidth > 768 ? 768 : this.html.clientWidth;
         this.html.setAttribute('data-dpr', this.dpr);
-        this.html.style.fontSize = 100 * this.width / 750 + 'px';
+        this.html.style.fontSize = 100 * this.width / 768 + 'px';
         this.wpstyle = document.querySelector('.welcome-page').style;
         document.querySelector('#app-main').style.minHeight = this.wpstyle.height = this.wpstyle.lineHeight = document.documentElement.clientHeight + 'px';
     }
@@ -31,9 +32,13 @@ Vue.use(VueResource);
 const socket = io();
 const store = new Vuex.Store({
     state: {
-        messageArr: []
+        messageArr: [],
+        username: ''
     },
     mutations: {
+        setUsername(state, payload){
+            state.username = payload.username;
+        },
         getAllMessages(state, payload){
             state.messageArr = payload.messageArr;
         },
@@ -47,6 +52,9 @@ const store = new Vuex.Store({
     getters: {
         messageArr: state=> {
             return state.messageArr;
+        },
+        username: state=> {
+            return state.username;
         }
     }
 });
@@ -88,9 +96,13 @@ const app = new Vue({
         /**
          * Confirm session, Vue-Router SPA has no idea to use middlewares because everything is under '/'
          */
-        this.$http.get('/anth').then(res=>{
-            if(!res.body.success){
+        this.$http.get('/anth').then(res=> {
+            if (!res.body.success) {
                 location.hash = '#/login';
+            } else {
+                store.commit('setUsername', {
+                    username: res.body.user ? res.body.user.username : ''
+                });
             }
         });
     },

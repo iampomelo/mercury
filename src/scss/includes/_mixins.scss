@@ -1,3 +1,5 @@
+@import "variables";
+
 @mixin font-style{
   font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial, sans-serif;
 }
@@ -6,4 +8,13 @@
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
+}
+
+@mixin fixed-menu{
+  position: fixed;
+  z-index: 900;
+  width: 100%;
+  vertical-align: middle;
+  max-width: $max-width;
+  background-color: $mercury-color-1;
 }

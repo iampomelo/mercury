@@ -10,6 +10,10 @@
 </template>
 <script>
     export default{
+        mounted(){
+            this.username = this.password = '';
+            this.isLoading = false;
+        },
         data(){
             return {
                 username: '',
@@ -25,8 +29,7 @@
                     password: this.password
                 }).then(res=> {
                     if (res.body.success) {
-                        location.hash = '#/';
-                        this.isLoading = false;
+                        location.href = '/';
                     }
                 });
             }

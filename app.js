@@ -1,5 +1,6 @@
 var express = require('express'),
     path = require('path'),
+    http = require('http'),
     favicon = require('serve-favicon'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
@@ -11,7 +12,10 @@ var express = require('express'),
     webpackDevConfig = require('./webpack.config.js'),
     compiler = webpack(webpackDevConfig),
     config = require('./config'),
-    mongoStore = require('connect-mongo')(session);
+    debug = require('debug')('mercury:server'),
+    mongoStore = require('connect-mongo')(session),
+    cookie = require('cookie'),
+    parseSignedCookie = require('./widget/utils').parseSignedCookie;
 
 var routes = require('./routes/router');
 
@@ -27,16 +31,18 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+
+var sessionStore = new mongoStore({
+    url: config.dbURL,
+    ttl: 60 * 30
+});
 app.use(session({
     secret: config.cookieSecret,
     key: config.cookieName,
     cookie: {
-        maxAge: 1000 * 60 * 5
+        maxAge: 1000 * 60 * 60 * 24
     },
-    store: new mongoStore({
-        url: config.dbURL,
-        ttl: 60 * 5
-    }),
+    store: sessionStore,
     resave: true,
     saveUninitialized: true
 }));
@@ -52,6 +58,132 @@ app.use(webpackHotMiddleware(compiler));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/', routes);
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '9999');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+
+/**
+ * Use socket.io
+ */
+
+var io = require('socket.io')(server);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Configure socket.io
+ */
+
+var messageArr = ['message1', 'message2'];
+
+io.use(function (socket,next) {
+    var handshakeData = socket.request;
+    handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
+    if (handshakeData.cookie['mercury_cookie']) {
+        sessionStore.get(parseSignedCookie(handshakeData.cookie['mercury_cookie'], config.cookieSecret), function (err, session) {
+            if (err) {
+                return next(new Error('Authentication error'));
+            } else {
+                socket.request.session = session;
+                if (session.user) {
+                    next();
+                } else {
+                    return next(new Error('No login'));
+                }
+            }
+        });
+    } else {
+        return next(new Error('No session'));
+    }
+});
+
+
+io.on('connection', function (socket) {
+    socket.on('getAllMessages', function () {
+        socket.emit('allMessages', messageArr);
+    });
+    socket.on('createMessage', function (message) {
+        messageArr.push(message);
+        io.emit('messageAdded', message);
+    });
+});
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    var bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    var addr = server.address();
+    var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind);
+}
 
 
 // catch 404 and forward to error handler

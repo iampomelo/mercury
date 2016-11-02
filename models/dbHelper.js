@@ -3,6 +3,5 @@ var config = require('../config'),
 module.exports = function (fn) {
     MongoClient.connect(config.dbURL, function (err, db) {
         fn(db);
-        db.close();
     });
 };
