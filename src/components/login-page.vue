@@ -23,15 +23,17 @@
         },
         methods: {
             load(){
-                this.isLoading = true;
-                this.$http.post('/login', {
-                    username: this.username,
-                    password: this.password
-                }).then(res=> {
-                    if (res.body.success) {
-                        location.href = '/';
-                    }
-                });
+                if(this.isLoading == false){
+                    this.isLoading = true;
+                    this.$http.post('/login', {
+                        username: this.username,
+                        password: this.password
+                    }).then(res=> {
+                        if (res.body.success) {
+                            location.href = '/';
+                        }
+                    });
+                }
             }
         }
     }

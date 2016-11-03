@@ -44,11 +44,11 @@ body {
     color: $mercury-color-2;
     font-size: .3rem;
   }
-  .left-park{
+  .left-park {
     position:absolute;
     left:.3rem;
   }
-  .right-park{
+  .right-park {
     position:absolute;
     right:.3rem;
   }
@@ -73,6 +73,10 @@ body {
       background-color: $mercury-color-2;
     }
   }
+}
+
+.middle-content {
+  padding-top: $top-menu-height;
 }
 
 .login-field {
@@ -118,6 +122,18 @@ body {
         background-color: darken($mercury-color-1, 20%);
         border-color: darken($mercury-color-2, 10%);
       }
+    }
+  }
+}
+
+.dialog-list{
+  .dialog-item{
+    height: $dialog-item-height;
+    line-height: $dialog-item-height;
+    padding: 0 .6rem;
+    border-bottom: 1px solid $mercury-color-3;
+    &:active{
+      background-color: $mercury-color-5;
     }
   }
 }

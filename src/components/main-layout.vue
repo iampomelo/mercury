@@ -4,19 +4,26 @@
             <span class="left-park">{{$store.getters.username}}</span>
             <span class="right-park">设置</span>
         </section>
+        <router-view/>
         <section class="bottom-menu">
-            <span @click="message">消息</span>
+            <span @click="locationHash('#/')">消息</span>
             <span></span>
-            <span>好友</span>
+            <span @click="locationHash('#/friend')">好友</span>
         </section>
     </div>
 </template>
 <script>
+    import DialogList from './dialog-list';
+    import FriendList from './friend-list';
     export default{
         methods: {
-            message(){
-                location.hash = '#/chat';
+            locationHash(hash){
+                location.hash = hash;
             }
+        },
+        components:{
+            DialogList,
+            FriendList
         }
     }
 </script>

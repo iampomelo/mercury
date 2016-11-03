@@ -1,10 +1,11 @@
-var dbHelper = require('../models/dbHelper');
+var dbHelper = require('../models/dbHelper'),
+    resSendError = require('../widget/utils').resSendError;
 
 exports.stateCheck = (req, res)=> {
     if (req.session && req.session.user) {
         res.send({"success": true, "user": req.session.user});
     } else {
-        res.send({"success": false});
+        resSendError(res, '会话超时,请重新登录');
     }
 };
 
@@ -31,15 +32,22 @@ exports.login = (req, res)=> {
         req.session.user = {username: username};
         res.send({"success": true, "user": data});
     }, ()=> {
-        res.send({"success": false});
+        resSendError(res, '账号密码错误');
     });
 };
 
 exports.logout = (req, res)=> {
     if (req.session && req.session.user) {
+        var username = req.session.user;
         req.session.user = null;
-        res.send({"success": true});
+        dbHelper(db=> {
+            var collection = db.collection('users');
+            collection.updateOne({"username": username}, {$set: {"online": false}}).then(()=> {
+                db.close();
+                res.send({"success": true});
+            });
+        });
     } else {
-        res.send({"success": false});
+        resSendError(res, '用户已经退出');
     }
 };

@@ -1,7 +1,7 @@
 <template>
     <section>
         <ul>
-            <li v-for="message in $store.getters.messageArr">{{message}}</li>
+            <li>{{message}}</li>
         </ul>
         <label for="messageInput"></label>
         <input type="text" id="messageInput" v-model="content"/>
@@ -17,10 +17,6 @@
         },
         methods:{
             send(){
-                this.$store.commit('sendMessage',{
-                    content:this.content
-                });
-                this.content = '';
             }
         }
     }

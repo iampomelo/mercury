@@ -15,11 +15,11 @@ var express = require('express'),
     debug = require('debug')('mercury:server'),
     mongoStore = require('connect-mongo')(session),
     cookie = require('cookie'),
-    parseSignedCookie = require('./widget/utils').parseSignedCookie;
-
-var routes = require('./routes/router');
-
-var app = express();
+    parseSignedCookie = require('./widget/utils').parseSignedCookie,
+    authentication = require('./middleware/authentication'),
+    routes = require('./route'),
+    socketAPI = require('./socket-api'),
+    app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -46,6 +46,8 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
+app.use(authentication);
 
 app.use(webpackDevMiddleware(compiler, {
     publicPath: webpackDevConfig.output.publicPath,
@@ -91,9 +93,8 @@ server.on('listening', onListening);
  * Configure socket.io
  */
 
-var messageArr = ['message1', 'message2'];
 
-io.use(function (socket,next) {
+io.use((socket, next)=> {
     var handshakeData = socket.request;
     handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
     if (handshakeData.cookie['mercury_cookie']) {
@@ -115,14 +116,15 @@ io.use(function (socket,next) {
 });
 
 
-io.on('connection', function (socket) {
-    socket.on('getAllMessages', function () {
-        socket.emit('allMessages', messageArr);
-    });
-    socket.on('createMessage', function (message) {
-        messageArr.push(message);
-        io.emit('messageAdded', message);
-    });
+io.on('connection', socket=> {
+    socket.on('mercury', req=> socketAPI[req.action](req.data, socket, io));
+    // socket.on('getAllMessages', function () {
+    //     socket.emit('allMessages', messageArr);
+    // });
+    // socket.on('createMessage', function (message) {
+    //     messageArr.push(message);
+    //     io.emit('messageAdded', message);
+    // });
 });
 
 /**

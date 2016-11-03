@@ -3,6 +3,8 @@ import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
 import appMain from './main.vue';
+import DialogList from './components/dialog-list.vue';
+import FriendList from './components/friend-list.vue';
 import style from './scss/style.scss';
 
 class __init_page {
@@ -32,26 +34,20 @@ Vue.use(VueResource);
 const socket = io();
 const store = new Vuex.Store({
     state: {
-        messageArr: [],
-        username: ''
+        id2title: {},
+        username: 'abc'
     },
     mutations: {
         setUsername(state, payload){
             state.username = payload.username;
         },
-        getAllMessages(state, payload){
-            state.messageArr = payload.messageArr;
-        },
-        addMessage(state, payload){
-            state.messageArr.push(payload.message);
-        },
-        sendMessage(state, payload){
-            socket.emit('createMessage', payload.content)
+        setId2title(state, payload){
+            state.id2title = payload.id2title;
         }
     },
     getters: {
-        messageArr: state=> {
-            return state.messageArr;
+        id2title: state=> {
+            return state.id2title;
         },
         username: state=> {
             return state.username;
@@ -63,7 +59,15 @@ const routes = [{
     component: appMain,
     children: [{
         path: '',
-        component: appMain.components.MainLayout
+        component: appMain.components.MainLayout,
+        children: [{
+            path: '/dialog',
+            component: DialogList
+        }, {
+            path: '/friend',
+            component: FriendList
+        }],
+        redirect: '/dialog'
     }, {
         path: '/chat',
         component: appMain.components.ChatPage
@@ -77,18 +81,6 @@ const router = new VueRouter({
 });
 
 
-socket.emit('getAllMessages');
-socket.on('allMessages', messageArr=> {
-    store.commit('getAllMessages', {
-        messageArr
-    });
-});
-socket.on('messageAdded', message=> {
-    store.commit('addMessage', {
-        message
-    });
-});
-
 const app = new Vue({
     store,
     router,
@@ -96,17 +88,32 @@ const app = new Vue({
         /**
          * Confirm session, Vue-Router SPA has no idea to use middlewares because everything is under '/'
          */
-        this.$http.get('/anth').then(res=> {
+        this.$http.get('/auth').then(res=> {
             if (!res.body.success) {
                 location.hash = '#/login';
             } else {
                 store.commit('setUsername', {
                     username: res.body.user ? res.body.user.username : ''
                 });
+                socket.emit('mercury', {
+                    action: 'getDialogList',
+                    data: {
+                        username: store.getters.username
+                    }
+                });
             }
         });
     },
     mounted(){
         new __init_page();
+        socket.on('dialogList', res=> {
+            if (res.success) {
+                store.commit('setId2title', {
+                    id2title: res.id2title
+                })
+            }
+        });
     }
 }).$mount('#app');
+
+
