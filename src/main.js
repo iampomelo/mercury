@@ -35,7 +35,8 @@ const socket = io();
 const store = new Vuex.Store({
     state: {
         id2title: {},
-        username: 'abc'
+        username: '',
+        chatRecords: []
     },
     mutations: {
         setUsername(state, payload){
@@ -43,6 +44,20 @@ const store = new Vuex.Store({
         },
         setId2title(state, payload){
             state.id2title = payload.id2title;
+        },
+        setChatRecords(state, payload){
+            state.chatRecords = payload.chatRecords;
+        },
+        /**
+         * Bridge Magic
+         */
+        __getChatRecords(state, payload){
+            socket.emit('mercury', {
+                action: 'getChatRecords',
+                data: {
+                    id: payload.id
+                }
+            });
         }
     },
     getters: {
@@ -51,6 +66,9 @@ const store = new Vuex.Store({
         },
         username: state=> {
             return state.username;
+        },
+        chatRecords: state=> {
+            return state.chatRecords
         }
     }
 });
@@ -110,6 +128,13 @@ const app = new Vue({
             if (res.success) {
                 store.commit('setId2title', {
                     id2title: res.id2title
+                })
+            }
+        });
+        socket.on('chatRecords', res=> {
+            if (res.success) {
+                store.commit('setChatRecords', {
+                    chatRecords: res.records
                 })
             }
         });

@@ -18,3 +18,18 @@
   max-width: $max-width;
   background-color: $mercury-color-1;
 }
+
+@mixin message-content($side, $_radius...) {
+  .message-from {
+    text-align: $side;
+  }
+  .message-content {
+    border-radius: $_radius;
+    margin-#{$side}: .15rem;
+    float: $side;
+    @if $side == 'right' {
+      background-color: $mercury-color-1;
+      color: #ffffff;
+    }
+  }
+}

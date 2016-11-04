@@ -45,12 +45,12 @@ body {
     font-size: .3rem;
   }
   .left-park {
-    position:absolute;
-    left:.3rem;
+    position: absolute;
+    left: .3rem;
   }
   .right-park {
-    position:absolute;
-    right:.3rem;
+    position: absolute;
+    right: .3rem;
   }
 }
 
@@ -72,6 +72,26 @@ body {
       height: $bottom-menu-height - .2rem;
       background-color: $mercury-color-2;
     }
+  }
+  input {
+    vertical-align: middle;
+    height: .7rem;
+    width: 72%;
+    line-height: $bottom-menu-height;
+    margin: ($bottom-menu-height - .7rem)/2 3% ($bottom-menu-height - .7rem)/2 4%;
+    border-radius: 4px;
+    font-size: .4rem;
+  }
+  button {
+    vertical-align: middle;
+    height: .6rem;
+    width: 14%;
+    margin: auto 4% auto 3%;
+    border: 1px solid $mercury-color-2;
+    background-color: $mercury-color-1;
+    color: $mercury-color-2;
+    font-size: .35rem;
+    border-radius: 4px;
   }
 }
 
@@ -126,14 +146,58 @@ body {
   }
 }
 
-.dialog-list{
-  .dialog-item{
+.dialog-list {
+  .dialog-item {
     height: $dialog-item-height;
     line-height: $dialog-item-height;
     padding: 0 .6rem;
-    border-bottom: 1px solid $mercury-color-3;
-    &:active{
+    border-bottom: 1px solid $mercury-color-6;
+    &:active {
       background-color: $mercury-color-5;
     }
+  }
+}
+
+.message-list {
+  padding: .3rem .2rem;
+  .message-item {
+    margin-bottom: .2rem;
+    .message-from {
+      position: relative;
+      font-size: .25rem;
+      color: $mercury-color-3;
+    }
+    .message-content{
+      max-width: 4.5rem;
+      padding: .24rem .3rem;
+      background-color: $mercury-color-5;
+      font-size: .32rem;
+      line-height: .46rem;
+      margin-top: .15rem;
+    }
+    @at-root &.left{
+      @include message-content(left,0 .2rem .2rem .2rem);
+    }
+    @at-root &.right{
+      @include message-content(right,.2rem 0 .2rem .2rem);
+    }
+  }
+
+}
+
+.filling-block {
+  width: 100%;
+  height: $bottom-menu-height;
+}
+
+.fn-clear {
+  zoom: 1;
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
   }
 }
