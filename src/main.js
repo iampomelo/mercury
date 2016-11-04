@@ -34,8 +34,9 @@ Vue.use(VueResource);
 const socket = io();
 const store = new Vuex.Store({
     state: {
-        id2title: {},
+        id2title: {},//chatId:chatTitle
         username: '',
+        chatId: '',
         chatRecords: []
     },
     mutations: {
@@ -48,14 +49,35 @@ const store = new Vuex.Store({
         setChatRecords(state, payload){
             state.chatRecords = payload.chatRecords;
         },
+        addMessage(state, payload){
+            state.chatRecords.push(payload.newMessage);
+        },
         /**
-         * Bridge Magic
+         * Bridge Magic, with prefix __
          */
         __getChatRecords(state, payload){
+            state.chatId = payload.id;
             socket.emit('mercury', {
                 action: 'getChatRecords',
                 data: {
-                    id: payload.id
+                    chatId: payload.id
+                }
+            });
+        },
+        __sendMessage(state, payload){
+            socket.emit('mercury', {
+                action: 'sendMessage',
+                data: {
+                    chatId: state.chatId,
+                    content: payload.content
+                }
+            });
+        },
+        __leaveDialog(state){
+            socket.emit('mercury', {
+                action: 'leaveDialog',
+                data: {
+                    chatId: state.chatId
                 }
             });
         }
@@ -69,6 +91,9 @@ const store = new Vuex.Store({
         },
         chatRecords: state=> {
             return state.chatRecords
+        },
+        chatId: state=> {
+            return state.chatId
         }
     }
 });
@@ -135,6 +160,13 @@ const app = new Vue({
             if (res.success) {
                 store.commit('setChatRecords', {
                     chatRecords: res.records
+                })
+            }
+        });
+        socket.on('newMessage', res=> {
+            if (res.success) {
+                store.commit('addMessage', {
+                    newMessage: res.newMessage
                 })
             }
         });

@@ -1,6 +1,8 @@
 <template>
     <section>
-        <section class="top-menu"></section>
+        <section class="top-menu">
+            <span class="title">{{$store.getters.id2title[$store.getters.chatId]}}</span>
+        </section>
         <section class="middle-content">
             <ul class="message-list">
                 <li v-for="message in $store.getters.chatRecords"
@@ -28,7 +30,16 @@
         },
         methods: {
             send(){
+                this.$store.commit('__sendMessage', {
+                    content: this.content
+                });
+                this.content = '';
             }
+        },
+        beforeRouteLeave(to, from, next){
+//            this.$store.commit('__leaveDialog');
+            console.log('yes');
+            next();
         }
     }
 </script>

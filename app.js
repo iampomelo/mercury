@@ -40,7 +40,7 @@ app.use(session({
     secret: config.cookieSecret,
     key: config.cookieName,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24
+        maxAge: 1000 * 60 * 60 * 2
     },
     store: sessionStore,
     resave: true,
@@ -118,13 +118,6 @@ io.use((socket, next)=> {
 
 io.on('connection', socket=> {
     socket.on('mercury', req=> socketAPI[req.action](req.data, socket, io));
-    // socket.on('getAllMessages', function () {
-    //     socket.emit('allMessages', messageArr);
-    // });
-    // socket.on('createMessage', function (message) {
-    //     messageArr.push(message);
-    //     io.emit('messageAdded', message);
-    // });
 });
 
 /**
