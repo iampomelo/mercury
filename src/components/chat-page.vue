@@ -37,8 +37,7 @@
             }
         },
         beforeRouteLeave(to, from, next){
-//            this.$store.commit('__leaveDialog');
-            console.log('yes');
+            this.$store.commit('__leaveDialog');
             next();
         }
     }
