@@ -96,7 +96,7 @@ server.on('listening', onListening);
 
 io.use((socket, next)=> {
     var handshakeData = socket.request;
-    handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
+    handshakeData.cookie = handshakeData.headers.cookie ? cookie.parse(handshakeData.headers.cookie) : {};
     if (handshakeData.cookie['mercury_cookie']) {
         sessionStore.get(parseSignedCookie(handshakeData.cookie['mercury_cookie'], config.cookieSecret), function (err, session) {
             if (err) {

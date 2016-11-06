@@ -11,11 +11,11 @@
                     <div class="message-content">{{message.content}}</div>
                     <div class="fn-clear"></div>
                 </li>
-                <li class="filling-block"></li>
+                <li class="filling-block"/>
             </ul>
         </section>
         <section class="bottom-menu">
-            <label for="messageInput"></label>
+            <label for="messageInput"/>
             <input type="text" id="messageInput" v-model="content"/>
             <button @click="send">发送</button>
         </section>
@@ -39,6 +39,9 @@
         beforeRouteLeave(to, from, next){
             this.$store.commit('__leaveDialog');
             next();
+        },
+        updated(){
+            window.scrollTo(0, document.body.scrollHeight);
         }
     }
 </script>

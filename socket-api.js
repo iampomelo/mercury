@@ -34,7 +34,6 @@ module.exports = {
     },
     leaveDialog: (data, socket)=> {
         socket.leave(data.chatId);
-        console.log('123445');
     },
     getChatRecords: (data, socket)=> {
         var session = socket.request.session;

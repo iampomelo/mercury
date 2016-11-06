@@ -27,6 +27,7 @@ class __init_page {
     }
 }
 
+Vue.config.debug = true;
 Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(VueResource);
@@ -51,6 +52,7 @@ const store = new Vuex.Store({
         },
         addMessage(state, payload){
             state.chatRecords.push(payload.newMessage);
+            window.scrollTo(0, document.body.scrollHeight);
         },
         /**
          * Bridge Magic, with prefix __
@@ -167,7 +169,7 @@ const app = new Vue({
             if (res.success) {
                 store.commit('addMessage', {
                     newMessage: res.newMessage
-                })
+                });
             }
         });
     }

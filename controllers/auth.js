@@ -29,7 +29,7 @@ exports.login = (req, res)=> {
         });
     }).then(data=> {
         delete data.password;
-        req.session.user = {username: username};
+        req.session.user = {"username": username};
         res.send({"success": true, "user": data});
     }, ()=> {
         resSendError(res, '账号密码错误');

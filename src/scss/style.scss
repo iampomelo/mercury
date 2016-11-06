@@ -110,14 +110,14 @@ body {
   min-height: inherit;
   h2 {
     font-size: .5rem;
-    font-weight: 100;
+    font-weight: 300;
     margin-bottom: .8rem;
     color: $mercury-color-2;
   }
   input {
     display: block;
     margin: .05rem auto;
-    box-shadow: rgba(0, 0, 0, 0.1) 0 0 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 0 10px;
     -moz-box-shadow: rgba(0, 0, 0, 0.1) 0 0 10px;
     -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 0 10px;
     width: 5rem;
@@ -131,8 +131,8 @@ body {
     &[type=password] {
       border-radius: 0 0 .15rem .15rem;
     }
-    &[type=button] {
-      background-color: $mercury-color-1;
+    &#loading-button {
+      background: $mercury-color-1;
       color: $mercury-color-2;
       margin: .3rem auto;
       border: {
@@ -141,7 +141,6 @@ body {
         width: 2px;
         style: solid;
       }
-    ;
       &.loading {
         background-color: darken($mercury-color-1, 20%);
         border-color: darken($mercury-color-2, 10%);
