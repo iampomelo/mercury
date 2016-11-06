@@ -52,7 +52,7 @@ body {
     position: absolute;
     right: .3rem;
   }
-  .title{
+  .title {
     display: block;
     text-align: center;
   }
@@ -81,7 +81,7 @@ body {
     vertical-align: middle;
     height: .7rem;
     width: 72%;
-    line-height: $bottom-menu-height;
+    line-height: .7rem;
     margin: ($bottom-menu-height - .7rem)/2 3% ($bottom-menu-height - .7rem)/2 4%;
     border-radius: 4px;
     font-size: .4rem;
@@ -122,6 +122,7 @@ body {
     -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0 0 10px;
     width: 5rem;
     height: .8rem;
+    line-height: .4rem;
     font-size: .4rem;
     color: $mercury-color-3;
     padding: .1rem .2rem;
@@ -131,7 +132,7 @@ body {
     &[type=password] {
       border-radius: 0 0 .15rem .15rem;
     }
-    &#loading-button {
+    &[type=button] {
       background: $mercury-color-1;
       color: $mercury-color-2;
       margin: .3rem auto;
@@ -170,7 +171,7 @@ body {
       font-size: .25rem;
       color: $mercury-color-3;
     }
-    .message-content{
+    .message-content {
       max-width: 4.5rem;
       padding: .24rem .3rem;
       background-color: $mercury-color-5;
@@ -178,11 +179,11 @@ body {
       line-height: .46rem;
       margin-top: .15rem;
     }
-    @at-root &.left{
-      @include message-content(left,0 .2rem .2rem .2rem);
+    @at-root &.left {
+      @include message-content(left, 0 .2rem .2rem .2rem);
     }
-    @at-root &.right{
-      @include message-content(right,.2rem 0 .2rem .2rem);
+    @at-root &.right {
+      @include message-content(right, .2rem 0 .2rem .2rem);
     }
   }
 

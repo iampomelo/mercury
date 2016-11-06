@@ -5,7 +5,7 @@
         <input type="text" id="username" v-model="username"/>
         <label for="password"/>
         <input type="password" id="password" v-model="password"/>
-        <input id="loading-button" type="button" :value="isLoading?'登录中...':'登录'" :class="{'loading': isLoading}" @click="load"/>
+        <input type="button" :value="isLoading?'登录中...':'登录'" :class="{'loading': isLoading}" @click="load"/>
     </section>
 </template>
 <script>
