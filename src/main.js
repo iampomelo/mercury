@@ -94,6 +94,9 @@ const store = new Vuex.Store({
         },
         __enterDialog(state, payload){
             state.chatId = state.username > payload.friendName ? state.username + '&' + payload.friendName : payload.friendName + '&' + state.username;
+            var obj = state.id2chatinfo;
+            obj[state.chatId] = {"title": "chat", "isGroup": false};
+            state.id2chatinfo = obj;
             socket.emit('mercury', {
                 action: 'enterDialog',
                 data: {
@@ -118,6 +121,14 @@ const store = new Vuex.Store({
         },
         friends: state=> {
             return state.friends;
+        },
+        title: state=> {
+            if (state.id2chatinfo[state.chatId].isGroup) {
+                return state.id2chatinfo[state.chatId].title;
+            } else {
+                var temp = state.chatId.split('&');
+                return temp[0] == state.username ? temp[1] : temp[0];
+            }
         }
     }
 });

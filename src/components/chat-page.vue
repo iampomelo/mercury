@@ -1,8 +1,8 @@
 <template>
     <section>
         <section class="top-menu">
-            <span class="left-park"><a href="#/dialog">&lt; 返回</a></span>
-            <span class="title">{{title}}</span>
+            <span class="left-park"><a href="#/dialog">&lt;返回</a></span>
+            <span class="title">{{$store.getters.title}}</span>
         </section>
         <section class="middle-content">
             <ul class="message-list">
@@ -46,16 +46,6 @@
         },
         updated(){
             window.scrollTo(0, document.body.scrollHeight);
-        },
-        computed:{
-            title(){
-               if(this.$store.getters.id2chatinfo[this.$store.getters.chatId].isGroup){
-                   return this.$store.getters.id2chatinfo[this.$store.getters.chatId].title;
-               }else{
-                   var temp = this.$store.getters.chatId.split('&');
-                   return temp[0] == this.this.$store.getters.username ? temp[1] : temp[0];
-               }
-            }
         }
     }
 </script>

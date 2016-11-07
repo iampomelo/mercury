@@ -13,6 +13,7 @@ module.exports = {
                     if (doc.dialogs) {
                         async.each(doc.dialogs, function (dialog, callback) {
                             collection2.findOne({"id": dialog}).then(doc=> {
+                                console.log(doc);
                                 id2chatinfo[dialog] = {"title": doc.title, "isGroup": doc.isGroup};
                                 callback();
                             }, err=>callback(err));
@@ -20,16 +21,13 @@ module.exports = {
                             db.close();
                             if (err) {
                                 socketSendError(socket, 'dialogList', '获取消息列表失败');
-                                return false;
                             } else {
                                 socket.emit('dialogList', {"success": true, "id2chatinfo": id2chatinfo});
-                                return true;
                             }
                         });
                     } else {
                         db.close();
                         socket.emit('dialogList', {"success": true, "id2chatinfo": id2chatinfo});
-                        return true;
                     }
                 });
             });
@@ -91,22 +89,20 @@ module.exports = {
                         async.parallel([callback=> {
                             collection1.insert({
                                 "id": data.chatId,
-                                "title": "",
+                                "title": "chat",
                                 "isGroup": false,
                                 "records": []
                             }).then(()=>callback(null, 'a'));
                         }, callback=> {
                             collection2.update({"username": session.user.username}, {
                                 $addToSet: {
-                                    "dialogs": data.friendName
+                                    "dialogs": data.chatId
                                 }
                             }).then(()=>callback(null, 'b'));
                         }], (err, results)=> {
                             if (results[0] == 'a' && results[1] == 'b') {
                                 db.close();
-                                if (this.getDialogList(data, socket)) {
-                                    socket.emit('chatRecords', {"success": true, "records": []});
-                                }
+                                socket.emit('chatRecords', {"success": true, "records": []});
                             }
                         });
                     }
