@@ -5,6 +5,7 @@ import VueResource from 'vue-resource';
 import appMain from './main.vue';
 import DialogList from './components/dialog-list.vue';
 import FriendList from './components/friend-list.vue';
+import SettingPage from './components/setting-page.vue';
 import style from './scss/style.scss';
 
 class __init_page {
@@ -35,24 +36,27 @@ Vue.use(VueResource);
 const socket = io();
 const store = new Vuex.Store({
     state: {
-        id2title: {},//chatId:chatTitle
+        id2chatinfo: {},
         username: '',
         chatId: '',
-        chatRecords: []
+        chatRecords: [],
+        friends: []
     },
     mutations: {
         setUsername(state, payload){
             state.username = payload.username;
         },
-        setId2title(state, payload){
-            state.id2title = payload.id2title;
+        setId2chatinfo(state, payload){
+            state.id2chatinfo = payload.id2chatinfo;
+        },
+        setFriends(state, payload){
+            state.friends = payload.friends;
         },
         setChatRecords(state, payload){
             state.chatRecords = payload.chatRecords;
         },
         addMessage(state, payload){
             state.chatRecords.push(payload.newMessage);
-            window.scrollTo(0, document.body.scrollHeight);
         },
         /**
          * Bridge Magic, with prefix __
@@ -64,6 +68,11 @@ const store = new Vuex.Store({
                 data: {
                     chatId: payload.id
                 }
+            });
+        },
+        __getFriendList(){
+            socket.emit('mercury', {
+                action: 'getFriendList'
             });
         },
         __sendMessage(state, payload){
@@ -82,20 +91,33 @@ const store = new Vuex.Store({
                     chatId: state.chatId
                 }
             });
+        },
+        __enterDialog(state, payload){
+            state.chatId = state.username > payload.friendName ? state.username + '&' + payload.friendName : payload.friendName + '&' + state.username;
+            socket.emit('mercury', {
+                action: 'enterDialog',
+                data: {
+                    chatId: state.chatId,
+                    friendName: payload.friendName
+                }
+            });
         }
     },
     getters: {
-        id2title: state=> {
-            return state.id2title;
+        id2chatinfo: state=> {
+            return state.id2chatinfo;
         },
         username: state=> {
             return state.username;
         },
         chatRecords: state=> {
-            return state.chatRecords
+            return state.chatRecords;
         },
         chatId: state=> {
-            return state.chatId
+            return state.chatId;
+        },
+        friends: state=> {
+            return state.friends;
         }
     }
 });
@@ -119,6 +141,9 @@ const routes = [{
     }, {
         path: '/login',
         component: appMain.components.LoginPage
+    }, {
+        path: '/setting',
+        component: SettingPage
     }]
 }];
 const router = new VueRouter({
@@ -153,16 +178,24 @@ const app = new Vue({
         new __init_page();
         socket.on('dialogList', res=> {
             if (res.success) {
-                store.commit('setId2title', {
-                    id2title: res.id2title
-                })
+                store.commit('setId2chatinfo', {
+                    id2chatinfo: res.id2chatinfo
+                });
+            }
+        });
+        socket.on('friendList', res=> {
+            if (res.success) {
+                store.commit('setFriends', {
+                    friends: res.friends
+                });
             }
         });
         socket.on('chatRecords', res=> {
             if (res.success) {
                 store.commit('setChatRecords', {
                     chatRecords: res.records
-                })
+                });
+                location.hash = '#/chat';
             }
         });
         socket.on('newMessage', res=> {

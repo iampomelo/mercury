@@ -32,13 +32,16 @@ body {
   color: $mercury-color-2;
   animation: disappear 3s ease 1s 1 normal running forwards;
   -webkit-animation: disappear 3s ease 1s 1 normal running forwards;
+  img {
+    width: 80%;
+  }
 }
 
 .top-menu {
   @include fixed-menu;
   top: 0;
   height: $top-menu-height;
-  span {
+  span, a {
     vertical-align: middle;
     line-height: $top-menu-height;
     color: $mercury-color-2;
@@ -76,6 +79,9 @@ body {
       height: $bottom-menu-height - .2rem;
       background-color: $mercury-color-2;
     }
+    &.selected{
+      background-color: darken($mercury-color-1, 20%);
+    }
   }
   input {
     vertical-align: middle;
@@ -100,6 +106,7 @@ body {
 }
 
 .middle-content {
+  text-align: center;
   padding-top: $top-menu-height;
 }
 
@@ -151,6 +158,7 @@ body {
 }
 
 .dialog-list {
+  text-align: left;
   .dialog-item {
     height: $dialog-item-height;
     line-height: $dialog-item-height;
@@ -158,6 +166,25 @@ body {
     border-bottom: 1px solid $mercury-color-6;
     &:active {
       background-color: $mercury-color-5;
+    }
+  }
+}
+
+.friend-list {
+  text-align: left;
+  .friend-item {
+    height: $friend-item-height;
+    line-height: $friend-item-height;
+    padding: 0 .6rem;
+    border-bottom: 1px solid $mercury-color-6;
+    &:active {
+      background-color: $mercury-color-5;
+    }
+    img {
+      height: $friend-item-height - .4rem;
+      vertical-align: middle;
+      border-radius: 50%;
+      margin-right: .3rem;
     }
   }
 }
@@ -192,6 +219,20 @@ body {
 .filling-block {
   width: 100%;
   height: $bottom-menu-height;
+}
+
+.large-button {
+  height: 1rem;
+  width: 95%;
+  margin: .1rem auto;
+  font-size: .3rem;
+  color: $mercury-color-2;
+  background-color: $mercury-color-1;
+  border-radius: 0.15rem;
+}
+
+#logout-button{
+  background-color: $mercury-color-7;
 }
 
 .fn-clear {

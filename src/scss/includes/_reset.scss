@@ -40,7 +40,12 @@ input {
 }
 
 input,
-button {
+button,
+textarea {
   -moz-appearance: none;
   -webkit-appearance: none;
+}
+
+a{
+  text-decoration: none;
 }

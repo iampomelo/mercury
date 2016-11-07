@@ -9,7 +9,6 @@ router.get('/', function (req, res) {
 router.get('/auth', auth.stateCheck);
 router.post('/login', auth.login);
 router.get('/logout',auth.logout);
-router.get('/dialogList',chat.getDialogList);
 
 
 module.exports = router;

@@ -1,10 +1,21 @@
 <template>
     <section class="middle-content">
-        <div> f list</div>
+        <ul class="friend-list">
+            <li class="friend-item" v-for="item in $store.getters.friends" @click="enterDialog(item)"><img
+                    src="../../resources/avator.png"/>{{item}}
+            </li>
+        </ul>
     </section>
 </template>
 <script>
     export default{
-        name:'name'
+        created(){
+            this.$store.commit('__getFriendList');
+        },
+        methods: {
+            enterDialog(friendName){
+                this.$store.commit('__enterDialog', {friendName});
+            }
+        }
     }
 </script>
