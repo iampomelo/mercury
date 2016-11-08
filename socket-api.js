@@ -13,7 +13,6 @@ module.exports = {
                     if (doc.dialogs) {
                         async.each(doc.dialogs, function (dialog, callback) {
                             collection2.findOne({"id": dialog}).then(doc=> {
-                                console.log(doc);
                                 id2chatinfo[dialog] = {"title": doc.title, "isGroup": doc.isGroup};
                                 callback();
                             }, err=>callback(err));
@@ -81,6 +80,7 @@ module.exports = {
     enterDialog: (data, socket)=> {
         var session = socket.request.session;
         if (session && session.user) {
+            socket.join(data.chatId);
             dbHelper(db=> {
                 var collection1 = db.collection('chats');
                 var collection2 = db.collection('users');
@@ -99,8 +99,14 @@ module.exports = {
                                     "dialogs": data.chatId
                                 }
                             }).then(()=>callback(null, 'b'));
+                        }, callback=> {
+                            collection2.update({"username": data.friendName}, {
+                                $addToSet: {
+                                    "dialogs": data.chatId
+                                }
+                            }).then(()=>callback(null, 'c'));
                         }], (err, results)=> {
-                            if (results[0] == 'a' && results[1] == 'b') {
+                            if (results.toString() == ['a', 'b', 'c'].toString()) {
                                 db.close();
                                 socket.emit('chatRecords', {"success": true, "records": []});
                             }
@@ -110,6 +116,17 @@ module.exports = {
                         socket.emit('chatRecords', {"success": true, "records": doc.records});
                         db.close();
                     }
+                });
+            });
+        }
+    },
+    disconnect: socket=> {
+        var session = socket.request.session;
+        if (session && session.user) {
+            dbHelper(db=> {
+                var collection = db.collection('users');
+                collection.updateOne({"username": session.user.username}, {$set: {"online": false}}).then(()=> {
+                    db.close();
                 });
             });
         }

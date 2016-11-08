@@ -118,6 +118,7 @@ io.use((socket, next)=> {
 
 io.on('connection', socket=> {
     socket.on('mercury', req=> socketAPI[req.action](req.data, socket, io));
+    socket.on('disconnect', ()=>socketAPI['disconnect'](socket));
 });
 
 /**
