@@ -1,5 +1,5 @@
 <p><img width="180" src="https://raw.githubusercontent.com/iampomelo/mercury/master/resources/description/mercury.png"></p>
-An InstantMessaging web app implemented with **socket.io** and **vue family**. 
+An instantMessaging web app implemented with __socket.io__ and __vue family__. 
 With this app, you are able to chat with others in a web page.
 
 ## Introduction
